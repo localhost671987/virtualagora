@@ -1,14 +1,96 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Home{% endblock %}
 
 {% block content %}
-{% if user.is_authenticated %}
-<h1 class="red">
-  Hi {{ user.username }}!
-</h1>
-{% else %}
-<p>You are not logged in</p>
-<a href="{% url 'login' %}">Log In</a>
-{% endif %}
+<div class="main">
+  <img src="{% static 'img/greek.jpg' %}" class="img-fluid img-bg" alt="">
+  <div class="content">
+    <div class="container h-100">
+      <nav class="navbar navbar-expand-lg py-4">
+        <div class="container-fluid">
+          <a class="navbar-brand bg-white fw-bold" href="{% url 'login' %}">Virtual Agora</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <i class="fa-solid fa-bars text-white p-1"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li class="nav-item dropdown me-lg-4">
+                <a class="nav-link dropdown-toggle text-white fw-bold" href="#" id="navbarDropdown" role="button"
+                  data-bs-toggle="dropdown" aria-expanded="false">
+                  Quotes
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="#">My Posts</a></li>
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+                  <li><a class="dropdown-item" href="#">My Discussions</a></li>
+                </ul>
+              </li>
+              <li class="nav-item dropdown me-lg-4">
+                <a class="nav-link dropdown-toggle text-white fw-bold" href="#" id="navbarDropdown" role="button"
+                  data-bs-toggle="dropdown" aria-expanded="false">
+                  Posts
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="#">My Posts</a></li>
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+                  <li><a class="dropdown-item" href="#">My Discussions</a></li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white fw-bold me-lg-4" href="#">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white fw-bold me-lg-4" href="#">Contact Us</a>
+              </li>
+              <li>
+                <div class="d-none d-lg-block">
+                  {% if user.is_authenticated %}
+                  <a href="{% url 'logout' %}" class="btn fancy-button">Log Out</a>
+                  {% else %}
+                  <a href="{% url 'login' %}" class="btn fancy-button">Log In</a>
+                  {% endif %}
+                </div>
+                <div class="d-block d-lg-none">
+                  {% if user.is_authenticated %}
+                  <a href="{% url 'logout' %}" class="nav-link text-white fw-bold">Log Out</a>
+                  {% else %}
+                  <a href="{% url 'login' %}" class="nav-link text-white fw-bold">Log In</a>
+                  {% endif %}
+                </div>
+
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <div class="center-form">
+        <p>
+          How are you feeling today?
+        </p>
+        <form class="form-inline search-menu d-flex justify-content-between d-flex ps-1 py-1 mx-2">
+          <input class="custom-input" type="text">
+          <button class="btn search-btn" type="button">
+            <em class="fa-solid fa-lg fa-search"></em>
+          </button>
+        </form>
+        <div class="text-center mt-5">
+          <button class="btn btn-lg btn-outline-light rounded-pill me-4 fw-bold">Happy</button>
+          <button class="btn btn-lg btn-outline-light rounded-pill me-4 fw-bold">Sad</button>
+          <button class="btn btn-lg btn-outline-light rounded-pill me-4 fw-bold">Angry</button>
+          <button class="btn btn-lg btn-outline-light rounded-pill me-4 fw-bold">Surprise</button>
+          <button class="btn btn-lg btn-outline-light rounded-pill fw-bold">Fear</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}

@@ -1,15 +1,46 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Login{% endblock %}
 
 {% block content %}
-<div>
-    
+<div class="login-page d-flex h-100vh">
+  <div class="col-12 col-md-6 col-lg-7 d-none d-md-block">
+    <div class="login-img-box">
+      <img src="{% static 'img/grassland.jpg' %}" class="img-fluid login-img" alt="">
+      <div class="content">
+        <h1 class="text-center text-white virtual-agora">Virtual Agora</h1>
+        <h3 class="text-white text-center fw-light">Ancient Philosophy for Emotional Wellbeing</h3>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-5">
+    <div class="login-form">
+      <a href="/">
+        <i class="fa-solid fa-arrow-left"></i>&nbsp;Back to Homepage
+      </a>
+      <form method="post" class="mt-3">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="id_username" class="form-label">Email address</label>
+          <input type="text" name="username" class="form-control" id="id_username" aria-describedby="emailHelp">
+          <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+        </div>
+        <div class="mb-3">
+          <label for="id_password" class="form-label">Password</label>
+          <input type="password" name="password" class="form-control" id="id_password">
+        </div>
+        <p class="text-center">
+          <a href="{% url 'password_reset' %}">Forgot Password?</a>
+        </p>
+
+        <button type="submit" class="btn btn-primary w-100">Sign In</button>
+        <p class="text-center mt-2">
+          Don't have an account? <a href="{% url 'register' %}">Sign Up</a>
+        </p>
+      </form>
+    </div>
+  </div>
 </div>
-<h2>Log In</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Log In</button>
-</form>
+
 {% endblock %}

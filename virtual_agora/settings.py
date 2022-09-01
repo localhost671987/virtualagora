@@ -128,7 +128,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
-STATIC_ROOT = os.path.join(BASE_DIR, "virtual_agora_app\static")
+STATIC_ROOT = os.path.join(BASE_DIR, "virtual_agora_app/static")
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
@@ -136,7 +136,8 @@ STATIC_URL = '/static/'
 
 MEDIA_URL = '/media/'
 
-STATICFILES_FINDERS = ['compressor.finders.CompressorFinder']
+STATICFILES_FINDERS = ['compressor.finders.CompressorFinder',
+                       'django.contrib.staticfiles.finders.AppDirectoriesFinder', ]
 
 COMPRESS_PRECOMPILERS = (
     ('text/x-scss', 'django_libsass.SassCompiler'),
@@ -155,3 +156,4 @@ GRAPH_MODELS = {
 }
 
 LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/accounts/login/'

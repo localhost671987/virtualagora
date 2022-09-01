@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="login-page d-flex h-100vh">
+    <div class="col-12 col-md-6 col-lg-5">
+        <div class="login-form">
+            <a href="/">
+                <i class="fa-solid fa-arrow-left"></i>&nbsp;Back to Homepage
+            </a>
+            <form method="post" class="mt-3">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="id_email" class="form-label">Email address</label>
+                    <input type="email" name="email" maxlength="150" autocapitalize="none" autocomplete="email"
+                        autofocus="" required="" id="id_email" class="form-control">
+                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="id_user_name" class="form-label">Username</label>
+                    <input type="text" name="user_name" maxlength="150" autocapitalize="none" autocomplete="user_name"
+                        autofocus="" required="" id="id_user_name" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="id_password1" class="form-label">Password</label>
+                    <input type="password" name="password1" autocomplete="new-password" required="" id="id_password1"
+                        aria-autocomplete="list" class="form-control">
+                    <div id="emailHelp" class="form-text">
+                        <ul>
+                            <li>Your password can’t be too similar to your other personal information.</li>
+                            <li>Your password must contain at least 8 characters.</li>
+                            <li>Your password can’t be a commonly used password.</li>
+                            <li> Your password can’t be entirely numeric.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="id_password2" class="form-label">Password Confirmation</label>
+                    <input type="password" name="password2" autocomplete="new-password" required="" id="id_password2"
+                        class="form-control">
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Register</button>
+                <p class="text-center mt-2">
+                    Have an account? <a href="{% url 'login' %}">Sign In</a>
+                </p>
+            </form>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-7 d-none d-md-block">
+        <div class="login-img-box">
+            <img src="{% static 'img/statue.jpg' %}" class="img-fluid login-img" alt="">
+            <div class="content">
+                <h1 class="text-center text-white virtual-agora">Virtual Agora</h1>
+                <h3 class="text-white text-center fw-light">Ancient Philosophy for Emotional Wellbeing</h3>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
