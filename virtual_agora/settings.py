@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -39,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'virtual_agora_app',
-    'django_extensions'
+    'django_extensions',
+    'compressor'
 ]
 
 MIDDLEWARE = [
@@ -54,10 +56,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'virtual_agora.urls'
 
+TEMPLATES_DIRS = os.path.join(BASE_DIR, 'templates')
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATES_DIRS],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -76,19 +80,19 @@ WSGI_APPLICATION = 'virtual_agora.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {  
-    'default': {  
-        'ENGINE': 'django.db.backends.mysql',  
-        'NAME': 'virtual_agora_db',  
-        'USER': 'root',  
-        'PASSWORD': '5eedPDAdev123',  
-        'HOST': '127.0.0.1',  
-        'PORT': '3306',  
-        'OPTIONS': {  
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"  
-        }  
-    }  
-}  
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'virtual_agora_db',
+        'USER': 'root',
+        'PASSWORD': '5eedPDAdev123',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+        }
+    }
+}
 
 
 # Password validation
@@ -124,8 +128,19 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
+STATIC_ROOT = os.path.join(BASE_DIR, "virtual_agora_app\static")
 
-STATIC_URL = 'static/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+STATIC_URL = '/static/'
+
+MEDIA_URL = '/media/'
+
+STATICFILES_FINDERS = ['compressor.finders.CompressorFinder']
+
+COMPRESS_PRECOMPILERS = (
+    ('text/x-scss', 'django_libsass.SassCompiler'),
+)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -135,6 +150,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.CustomUser'
 
 GRAPH_MODELS = {
-  'all_applications': True,
-  'group_models': True,
+    'all_applications': True,
+    'group_models': True,
 }
+
+LOGIN_REDIRECT_URL = '/'
