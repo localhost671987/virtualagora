@@ -76,5 +76,4 @@ manage.py
 
 # example database
 drf_example
-virtual_agora_app/__pycache__/
 CACHE/

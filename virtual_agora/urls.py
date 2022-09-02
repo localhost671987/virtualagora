@@ -22,5 +22,4 @@ urlpatterns = [
     path('accounts/', include("django.contrib.auth.urls")),
     path('accounts/register/', register, name='register'),
     path('', include('virtual_agora_app.urls', namespace='virtual_agora_app')),
-
 ]

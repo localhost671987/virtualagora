@@ -2,15 +2,16 @@
 {% load static %}
 
 {% block title %}Home{% endblock %}
-
+{% block topnav %}
+{% endblock %}
 {% block content %}
 <div class="main">
   <img src="{% static 'img/greek.jpg' %}" class="img-fluid img-bg" alt="">
-  <div class="content">
+  <div class="content"> 
     <div class="container h-100">
       <nav class="navbar navbar-expand-lg py-4">
-        <div class="container-fluid">
-          <a class="navbar-brand bg-white fw-bold" href="/">Virtual Agora</a>
+        <div class="container-fluid px-0">
+          <a class="navbar-brand bg-white fw-bold" href="{% url 'virtual_agora_app:index' %}">Virtual Agora</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
             data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
             aria-label="Toggle navigation">
@@ -37,7 +38,7 @@
                   Posts
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="#">My Posts</a></li>
+                  <li><a class="dropdown-item" href="{% url 'virtual_agora_app:post_list' %}">View Posts</a></li>
                   <li>
                     <hr class="dropdown-divider">
                   </li>
@@ -53,9 +54,9 @@
               <li>
                 <div class="d-none d-lg-block">
                   {% if user.is_authenticated %}
-                  <a href="{% url 'logout' %}" class="btn fancy-button">Log Out</a>
+                  <a href="{% url 'logout' %}" class="btn fancy-button fw-bold">Log Out</a>
                   {% else %}
-                  <a href="{% url 'login' %}" class="btn fancy-button">Log In</a>
+                  <a href="{% url 'login' %}" class="btn fancy-button fw-bold">Log In</a>
                   {% endif %}
                 </div>
                 <div class="d-block d-lg-none">
