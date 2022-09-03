@@ -1,23 +1,72 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}
 Posts
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1>
-        Posts
-    </h1>
+<div class="container mt-3">
+    <h2 class="text-center mb-4">
+        Posts from the Virtual Agora Community
+        <hr>
+    </h2>
+    <div class="row post-list">
+        {% for post in posts %}
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card border-0">
+                {% if post.image %}
+                <img src="{{post.image.url}}" class="card-img-top" alt="...">
+                {% else %}
+                <img src="{% static 'img/statue.jpg' %}" class="card-img-top" alt="...">
+                {% endif %}
+                <div class="card-body">
+                    <div class="d-flex flex-wrap justify-content-between">
+                        <p class="mb-2">
+                            <b>{{post.author}}</b> - {{post.published_date|date:"d M Y"}}
+                        </p>
+                        <p class="mb-2">
+                            {% if post.theme %}
+                            <span class="badge bg-primary">{{post.themes}}</span>
+                            {% endif %}
+                        </p>
+                    </div>
 
-    {% for post in posts %}
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">{{ post.title }}</h5>
-            <p class="card-text">{{ post.body }}</p>
-            <a href="{{ post.get_absolute_url }}" class="btn btn-primary">Read More</a>
+                    <h5 class="card-title mb-3">{{post.title}}</h5>
+                    <div class="text-center">
+                        <a href="#" class="btn btn-primary">Read Post</a>
+                    </div>
+                </div>
+            </div>
         </div>
         {% endfor %}
     </div>
-    {% endblock %}
+
+    <div class="pagination justify-content-center mt-4">
+        <span class="step-links py-3 bg-white">
+            {% if page_obj.has_previous %}
+            <a href="?page=1" class="p-3 text-decoration-none">
+                <i class="fa-solid fa-angles-left"></i>
+            </a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="p-3 bg-primary text-white text-decoration-none">
+                <i class="fa-solid fa-angle-left"></i>
+            </a>
+            {% endif %}
+
+            <span class="current p-3">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="p-3 bg-primary text-white text-decoration-none">
+                <i class="fa-solid fa-angle-right"></i>
+            </a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="p-3 text-decoration-none">
+                <i class="fa-solid fa-angles-right"></i>
+            </a>
+            {% endif %}
+        </span>
+    </div>
+
 </div>
+{% endblock %}

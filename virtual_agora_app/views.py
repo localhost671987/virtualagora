@@ -27,3 +27,5 @@ class PostView(ListView):
     model = Post
     template_name = 'post_list.html'
     context_object_name = 'posts'
+
+    paginate_by = 10

@@ -22,7 +22,7 @@ class Post(models.Model):
         ('draft', 'Draft'),
         ('published', 'Published'),
     )
-    theme = models.ManyToManyField(Theme, default=None)
+    theme = models.ManyToManyField(Theme, blank=True, related_name='post_theme')
     title = models.CharField(max_length=250)
     description = models.TextField(null=True)
     slug = models.SlugField(max_length=250, unique_for_date='published_date')
@@ -32,6 +32,7 @@ class Post(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='posts')
     status = models.CharField(
         max_length=15, choices=post_types, default='published')
+    image = models.ImageField(upload_to='post/', null=True, blank=True)
     objects = models.Manager()  # default manager
     post_objects = PostObjects()  # custom manager
 
@@ -41,6 +42,9 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+    def themes(self):
+        return ', '.join([item.name for item in self.theme.all()])
 
 
 class Comment(models.Model):
@@ -67,6 +71,7 @@ class Comment(models.Model):
 class Philosopher(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField(null=True)
+    image = models.ImageField(upload_to ='philosopher/', null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -82,6 +87,9 @@ class Quote(models.Model):
 
     def __str__(self):
         return self.quote
+    
+    def themes(self):
+        return ', '.join([item.name for item in self.theme.all()])
 
 
 class Newsletter(models.Model):
