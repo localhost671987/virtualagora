@@ -3,8 +3,7 @@ from django.db import models
 # from django.contrib.auth.models import User
 from django.utils import timezone
 from django.conf import settings
-
-# Create your models here.
+from django.urls import reverse
 
 
 class Theme(models.Model):
@@ -22,17 +21,18 @@ class Post(models.Model):
         ('draft', 'Draft'),
         ('published', 'Published'),
     )
-    theme = models.ManyToManyField(Theme, blank=True, related_name='post_theme')
+    theme = models.ManyToManyField(
+        Theme, blank=True, related_name='post_theme')
     title = models.CharField(max_length=250)
     description = models.TextField(null=True)
-    slug = models.SlugField(max_length=250, unique_for_date='published_date')
     published_date = models.DateTimeField(default=timezone.now)
     updated_date = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='posts')
     status = models.CharField(
-        max_length=15, choices=post_types, default='published')
+        max_length=15, choices=post_types, default='published', null=True, blank=True)
     image = models.ImageField(upload_to='post/', null=True, blank=True)
+    image_caption = models.CharField(max_length=250, null=True, blank=True)
     objects = models.Manager()  # default manager
     post_objects = PostObjects()  # custom manager
 
@@ -45,6 +45,12 @@ class Post(models.Model):
 
     def themes(self):
         return ', '.join([item.name for item in self.theme.all()])
+
+    def get_absolute_url(self):
+        return reverse('virtual_agora_app:post_detail' , args=[self.pk])
+    
+    def get_comments(self):
+        return Comment.objects.filter(post=self).order_by('-published_date')
 
 
 class Comment(models.Model):
@@ -62,7 +68,7 @@ class Comment(models.Model):
         ordering = ('published_date',)
 
     def __str__(self):
-        return 'Comment by {} on {}'.format(self.name, self.post)
+        return 'Comment by {} on {}'.format(self.author, self.post)
 
     def children(self):
         return Comment.objects.filter(parent=self)
@@ -71,10 +77,13 @@ class Comment(models.Model):
 class Philosopher(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField(null=True)
-    image = models.ImageField(upload_to ='philosopher/', null=True, blank=True)
+    image = models.ImageField(upload_to='philosopher/', null=True, blank=True)
 
     def __str__(self):
         return self.name
+    
+    def get_absolute_url(self):
+        return reverse('virtual_agora_app:philosopher_detail' , args=[self.pk])
 
 
 class Quote(models.Model):
@@ -87,7 +96,7 @@ class Quote(models.Model):
 
     def __str__(self):
         return self.quote
-    
+
     def themes(self):
         return ', '.join([item.name for item in self.theme.all()])
 
@@ -118,7 +127,8 @@ class MoodInstance(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='moodInstance')
     mood = models.CharField(max_length=50)
-    theme = models.ForeignKey(Theme, on_delete=models.CASCADE, related_name='moods')
+    theme = models.ForeignKey(
+        Theme, on_delete=models.CASCADE, related_name='moods')
     published_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

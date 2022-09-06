@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Create Post{% endblock %}
+{% block content %}
+<div class="container pt-100 mt-3">
+    <div class="create-page">
+        <h2 class="text-center mb-4">
+            Create a Post
+            <hr>
+        </h2>
+        <div class="col-7 m-auto bg-white p-4 mb-4">
+            <form action="{% url 'virtual_agora_app:post_create' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input class="form-control" type="text" name="title" maxlength="250" required="required"
+                        id="id_title">
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Content</label>
+                    <textarea class="form-control" name="description" cols="40" rows="10" required=""
+                        id="id_description" aria-required="true"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="image" class="form-label">Image</label>
+                    <input class="form-control" type="file" name="image" accept="image/*" id="id_image">
+                </div>
+                <div class="mb-3">
+                    <label for="image_caption" class="form-label">Caption</label>
+                    <input class="form-control" type="text" name="image_caption" maxlength="250" id="id_image_caption">
+                </div>
+                <select name="status" id="id_status" class="d-none form-select mb-3">
+                    <option value="">---------</option>
+                    <option value="draft">Draft</option>
+                    <option value="published" selected="">Published</option>
+                </select>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

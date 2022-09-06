@@ -1,0 +1,29 @@
+{% extends "base.html "%}
+
+{% load static %}
+
+{% block title %}
+Philosopher
+{% endblock %}
+
+{% block content %}
+<div class="container pt-100 mt-3 detail-page">
+    <h2 class="text-center mb-4">
+        Ancient Philosopher
+        <hr>
+    </h2>
+    <div class="row my-3">
+        <div class="col-12 col-md-6 col-lg-4">
+            <img src="{{ philosopher.image.url }}" class="img-fluid" alt="{{philosopher.name}}">
+        </div>
+        <div class="col-12 col-md-6 col-lg-8">
+            <h3 class="display-6 post-title text-center">
+                {{ philosopher.name }}
+            </h3>
+            <p>
+                {{ philosopher.description }}
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

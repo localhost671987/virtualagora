@@ -1,10 +1,17 @@
 @import "../bootstrap/scss/bootstrap.scss";
 @import "homepage";
 @import "login";
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;600;900&display=swap');
 
-*{
+* {
     box-sizing: border-box;
     border-radius: 0% !important;
+    font-family: 'Manrope', sans-serif;
+}
+
+.pt-100 {
+    padding-top: 100px;
 }
 
 .fit-cover {
@@ -48,7 +55,30 @@
     outline-offset: -7px;
 }
 
+.inconsolata {
+    font-family: 'Inconsolata', monospace;
+    font-weight: 600;
+    
+}
+
+.navbar {
+    a {
+        text-transform: uppercase;
+    }
+
+    .navbar-brand {
+        text-transform: none;
+        font-family: 'Inconsolata', monospace;
+        font-weight: 900;
+    }
+}
+
 .topnav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 999;
+
     .navbar-brand {
         padding: 2px 10px 6px 10px !important;
         font-size: 1.7rem !important;
@@ -56,9 +86,30 @@
     }
 }
 
-.post-list{
-    .card-img-top{
+.post-list {
+    .card-img-top {
         height: 300px;
         object-fit: cover;
     }
+}
+
+.detail-page {
+    .post-title {
+        font-size: 2rem;
+        font-weight: 300;
+    }
+}
+
+.philosophers-list {
+    .card-img-top {
+        height: 300px;
+        object-fit: cover;
+    }
+}
+
+.comment-form:focus {
+    box-shadow: none;
+    // border: 1px solid black !important;
+    // font-family: 'Inconsolata', monospace !important;
+    // font-weight: 600 !important;
 }

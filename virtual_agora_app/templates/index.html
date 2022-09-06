@@ -7,11 +7,11 @@
 {% block content %}
 <div class="main">
   <img src="{% static 'img/greek.jpg' %}" class="img-fluid img-bg" alt="">
-  <div class="content"> 
+  <div class="content">
     <div class="container h-100">
       <nav class="navbar navbar-expand-lg py-4">
         <div class="container-fluid px-0">
-          <a class="navbar-brand bg-white fw-bold" href="{% url 'virtual_agora_app:index' %}">Virtual Agora</a>
+          <a class="navbar-brand bg-white" href="{% url 'virtual_agora_app:index' %}">Virtual Agora</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
             data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
             aria-label="Toggle navigation">
@@ -24,12 +24,12 @@
                   data-bs-toggle="dropdown" aria-expanded="false">
                   Quotes
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="#">My Posts</a></li>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="#">Quotes Library</a></li>
                   <li>
                     <hr class="dropdown-divider">
                   </li>
-                  <li><a class="dropdown-item" href="#">My Discussions</a></li>
+                  <li><a class="dropdown-item" href="{% url 'virtual_agora_app:philosophers_list' %}">Philosopers</a></li>
                 </ul>
               </li>
               <li class="nav-item dropdown me-lg-4">
@@ -37,16 +37,26 @@
                   data-bs-toggle="dropdown" aria-expanded="false">
                   Posts
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="{% url 'virtual_agora_app:post_list' %}">View Posts</a></li>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="{% url 'virtual_agora_app:post_list' %}">All Posts</a></li>
+                  {% if user.is_authenticated %}
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+                  <li><a class="dropdown-item" href="{% url 'virtual_agora_app:my_posts' %}">My Posts</a></li>
                   <li>
                     <hr class="dropdown-divider">
                   </li>
                   <li><a class="dropdown-item" href="#">My Discussions</a></li>
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+                  <li><a class="dropdown-item" href="{% url 'virtual_agora_app:post_create' %}">Create Post</a></li>
+                  {% endif %}
                 </ul>
               </li>
               <li class="nav-item">
-                <a class="nav-link text-white fw-bold me-lg-4" href="#">About</a>
+                <a class="nav-link text-white fw-bold me-lg-4" href="{% url 'virtual_agora_app:about' %}">About</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link text-white fw-bold me-lg-4" href="#">Contact Us</a>

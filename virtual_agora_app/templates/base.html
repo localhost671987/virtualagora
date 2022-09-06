@@ -14,13 +14,14 @@
   {% compress css %}
   <link type="text/x-scss" href="{% static 'scss/custom.scss' %}" rel="stylesheet" media="screen">
   {% endcompress %}
+  <!-- <link href="{% static 'scss/custom.css' %}" rel="stylesheet"> -->
   <link rel="stylesheet" href="{% static 'fontawesome-free/css/all.min.css' %}" />
 </head>
 
 <body class="bg-light">
   {% block topnav %}
-  <div class="border-bottom border-primary bg-light">
-    <div class="topnav container">
+  <div class="topnav border-bottom border-primary bg-light">
+    <div class="container">
       <nav class="navbar navbar-expand-lg py-4">
         <div class="container-fluid px-0">
           <a class="navbar-brand bg-black fw-bold" href="{% url 'virtual_agora_app:index' %}">Virtual Agora</a>
@@ -36,12 +37,12 @@
                   data-bs-toggle="dropdown" aria-expanded="false">
                   Quotes
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="#">My Posts</a></li>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="#">Quotes Library</a></li>
                   <li>
                     <hr class="dropdown-divider">
                   </li>
-                  <li><a class="dropdown-item" href="#">My Discussions</a></li>
+                  <li><a class="dropdown-item" href="{% url 'virtual_agora_app:philosophers_list' %}">Philosopers</a></li>
                 </ul>
               </li>
               <li class="nav-item dropdown me-lg-4">
@@ -49,16 +50,26 @@
                   data-bs-toggle="dropdown" aria-expanded="false">
                   Posts
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="{% url 'virtual_agora_app:post_list' %}">View Posts</a></li>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="{% url 'virtual_agora_app:post_list' %}">All Posts</a></li>
+                  {% if user.is_authenticated %}
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+                  <li><a class="dropdown-item" href="{% url 'virtual_agora_app:my_posts' %}">My Posts</a></li>
                   <li>
                     <hr class="dropdown-divider">
                   </li>
                   <li><a class="dropdown-item" href="#">My Discussions</a></li>
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+                  <li><a class="dropdown-item" href="{% url 'virtual_agora_app:post_create' %}">Create Post</a></li>
+                  {% endif %}
                 </ul>
               </li>
               <li class="nav-item">
-                <a class="nav-link text-black fw-bold me-lg-4" href="#">About</a>
+                <a class="nav-link text-black fw-bold me-lg-4" href="{% url 'virtual_agora_app:about' %}">About</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link text-black fw-bold me-lg-4" href="#">Contact Us</a>
@@ -91,6 +102,7 @@
 
   {% block content %}
   {% endblock %}
+
   <script src="{% static 'jquery/dist/jquery.min.js' %}"></script>
   <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
   {% block javascript %}
