@@ -6,12 +6,57 @@ from django.conf import settings
 from django.urls import reverse
 
 
+
 class Theme(models.Model):
     name = models.CharField(max_length=50)
 
     def __str__(self):
         return self.name
 
+
+def get_sentiment(text):
+    dict = te.get_emotion(text)
+    emotion = max(dict, key=dict.get)
+    return Theme.objects.get(name=emotion.title())
+
+
+class Philosopher(models.Model):
+    name = models.CharField(max_length=50)
+    description = models.TextField(null=True)
+    image = models.ImageField(upload_to='philosopher/', null=True, blank=True)
+    date_of_birth = models.DateField(null=True, blank=True)
+    date_of_death = models.DateField(null=True, blank=True)
+    link = models.CharField(max_length=100, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse('virtual_agora_app:philosopher_detail', args=[self.pk])
+
+    def get_quotes(self):
+        return Quote.objects.filter(author=self)
+
+
+class Quote(models.Model):
+    title = models.TextField(max_length=500)
+    author = models.ForeignKey(
+        Philosopher, on_delete=models.CASCADE, related_name='quotes')
+    theme = models.ManyToManyField(Theme, default=None, blank=True)
+    published_date = models.DateTimeField(auto_now_add=True)
+    updated_date = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+
+    def themes(self):
+        return ', '.join([item.name for item in self.theme.all()])
+
+    def get_absolute_url(self):
+        return reverse('virtual_agora_app:quote_detail', args=[self.pk])
+
+    def get_comments(self):
+        return Comment.objects.filter(quote=self).order_by('-published_date')
 
 class Post(models.Model):
     class PostObjects(models.Manager):
@@ -47,19 +92,21 @@ class Post(models.Model):
         return ', '.join([item.name for item in self.theme.all()])
 
     def get_absolute_url(self):
-        return reverse('virtual_agora_app:post_detail' , args=[self.pk])
-    
+        return reverse('virtual_agora_app:post_detail', args=[self.pk])
+
     def get_comments(self):
         return Comment.objects.filter(post=self).order_by('-published_date')
 
 
 class Comment(models.Model):
     post = models.ForeignKey(
-        Post, on_delete=models.CASCADE, related_name='comments', blank=True, null=True)
+        Post, on_delete=models.CASCADE, related_name='comment_post', blank=True, null=True)
+    quote = models.ForeignKey(
+        Quote, on_delete=models.CASCADE, related_name='comment_quote', blank=True, null=True)
     parent = models.ForeignKey(
         'self', on_delete=models.CASCADE, blank=True, null=True)
     author = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='comments')
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='comment_author')
     body = models.TextField(max_length=500)
     published_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
@@ -72,33 +119,6 @@ class Comment(models.Model):
 
     def children(self):
         return Comment.objects.filter(parent=self)
-
-
-class Philosopher(models.Model):
-    name = models.CharField(max_length=50)
-    description = models.TextField(null=True)
-    image = models.ImageField(upload_to='philosopher/', null=True, blank=True)
-
-    def __str__(self):
-        return self.name
-    
-    def get_absolute_url(self):
-        return reverse('virtual_agora_app:philosopher_detail' , args=[self.pk])
-
-
-class Quote(models.Model):
-    title = models.TextField(max_length=500)
-    author = models.ForeignKey(
-        Philosopher, on_delete=models.CASCADE, related_name='quotes')
-    theme = models.ManyToManyField(Theme, default=None)
-    published_date = models.DateTimeField(auto_now_add=True)
-    updated_date = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.quote
-
-    def themes(self):
-        return ', '.join([item.name for item in self.theme.all()])
 
 
 class Newsletter(models.Model):

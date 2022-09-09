@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Theme, Post, Comment, Rating, Newsletter, Quote, Philosopher
-# Register your models here.
+from django import forms
+
 admin.site.register(Theme)
 admin.site.register(Post)
 admin.site.register(Comment)

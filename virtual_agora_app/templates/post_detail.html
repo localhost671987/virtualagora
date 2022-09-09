@@ -43,28 +43,25 @@ Posts
                 {% endif %}
             </div>
             {% endif %}
-            <div class="col-12 col-lg-6">
+            <div class="col-12 {% if post.image %}col-lg-6{% endif %}">
                 {% if post.theme %}
                 <span class="badge bg-primary">{{post.themes}}</span>
                 {% endif %}
                 <p class="post-content mt-2">
                     {{ post.description }}
                 </p>
-
                 <hr>
                 <div class="comment">
                     <h4 class="inconsolata">Comments</h4>
-                    <div>
-                        <form method="POST" class="post-comment">
-                            {% csrf_token %}
-                            <textarea class="form-control comment-form bg-white border-0" name="body" cols="40" rows="5"
-                                maxlength="500" required="" id="id_body"></textarea>
-                            <div class="text-center my-3">
-                                <button type="button" class="save btn btn-secondary">Cancel</button>
-                                <button type="submit" class="save btn btn-primary post-comment-btn">Submit</button>
-                            </div>
-                        </form>
-                    </div>
+                    <form method="POST" class="post-comment mb-5">
+                        {% csrf_token %}
+                        <textarea class="form-control comment-form bg-white border-0" name="body" cols="40" rows="5"
+                            maxlength="500" required="" id="id_body" placeholder="Enter comment here ..."></textarea>
+                        <div class="text-center my-3">
+                            <button type="button" class="save btn btn-secondary">Cancel</button>
+                            <button type="submit" class="save btn btn-primary post-comment-btn">Submit</button>
+                        </div>
+                    </form>
                     {% for comment in post.get_comments %}
                     <div class="comment-item card px-3 py-2 border-0">
                         <p class="comment-author">

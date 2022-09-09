@@ -1,0 +1,55 @@
+{% extends "base.html "%}
+{% load static %}
+{% block title %}
+Philosophers
+{% endblock %}
+{% block content %}
+<div class="container pt-100 mt-3">
+    <div class="detail-page">
+        <h3 class="display-6 post-title">
+            {{ quote.title }}
+        </h3>
+        <h5>
+            -
+            <a href="{{ quote.author.get_absolute_url }}" class="text-decoration-none fw-bold">{{ quote.author }}</a>
+        </h5>
+        {% if quote.theme %}
+        <p class="mb-2">
+            {% for item in quote.theme.all %}
+            <span class="badge bg-primary">
+                <a href="{% url 'virtual_agora_app:quote_theme' item.id %}" class="text-decoration-none text-white">
+                    {{item}}
+                </a>
+            </span>
+            {% endfor %}
+        </p>
+        {% endif %}
+        <hr>
+        <div class="comment">
+            <h4 class="inconsolata">Comments</h4>
+            <form method="POST" class="post-comment mb-5">
+                {% csrf_token %}
+                <textarea class="form-control comment-form bg-white border-0" name="body" cols="40" rows="5"
+                    maxlength="500" required="" id="id_body" placeholder="Enter comment here ..."></textarea>
+                <div class="text-center my-3">
+                    <button type="button" class="save btn btn-secondary">Cancel</button>
+                    <button type="submit" class="save btn btn-primary post-comment-btn">Submit</button>
+                </div>
+            </form>
+            {% for comment in quote.get_comments %}
+            <div class="comment-item card px-3 py-2 border-0">
+                <p class="comment-author">
+                    <span class="fw-bold">{{ comment.author }}
+                    </span>
+                    <span class="text-muted">- <small>{{ comment.published_date }}</small></span>
+                </p>
+                <p class="comment-content">
+                    {{ comment.body }}
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

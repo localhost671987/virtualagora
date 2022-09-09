@@ -1,16 +1,27 @@
-from .models import Post, Philosopher, Comment
+from .models import Post, Philosopher, Comment, Quote, Theme
 from django.utils import timezone
 from users.forms import RegistrationForm
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormMixin
+from django.views.generic.list import MultipleObjectMixin
 from django.views.generic import TemplateView
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import PostCreateForm, CommentCreateForm
+from .forms import PostCreateForm, CommentCreateForm, QuoteCreateForm
 from django.urls import reverse_lazy, reverse
+import text2emotion as te
+import nltk
+nltk.download('omw-1.4')
 
 # Create your views here.
+
+
+def get_emotion(text):
+    dict = te.get_emotion(text)
+    emotions = [item for item in dict if dict[item] > 0.1]
+    print(emotions)
+    return Theme.objects.filter(name__in=emotions)
 
 
 def register(request):
@@ -64,7 +75,7 @@ class PostDetailView(FormMixin, DetailView):
             return self.form_invalid(form)
 
     def form_valid(self, form):
-        obj = form.save(commit = False)
+        obj = form.save(commit=False)
         obj.post = self.object
         obj.save()
         return super(PostDetailView, self).form_valid(form)
@@ -89,10 +100,6 @@ class PostCreateView(CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
-
-
-def get_comment(self):
-    return Comment.objects.filter(post=self.object).order_by('-created_date')
 
 
 class PostUpdateView(UpdateView):
@@ -138,3 +145,86 @@ class PhilosopherDetailView(DetailView):
     model = Philosopher
     template_name = 'philosopher_detail.html'
     context_object_name = 'philosopher'
+
+
+class PhilosopherQuoteListView(DetailView, MultipleObjectMixin):
+    model = Philosopher
+    template_name = 'philosopher_quote_list.html'
+    context_object_name = 'philosopher'
+
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        object_list = Quote.objects.filter(author=self.object)
+        context = super(PhilosopherQuoteListView, self).get_context_data(
+            object_list=object_list, **kwargs)
+        return context
+
+
+class QuoteListView(ListView):
+    model = Quote
+    template_name = 'quote_list.html'
+    context_object_name = 'quotes'
+
+    paginate_by = 10
+
+
+class QuoteCreateView(CreateView):
+    model = Quote
+    template_name = 'quote_create.html'
+    form_class = QuoteCreateForm
+
+    def change_theme(self, instance):
+        instance.theme.add(Theme.objects.get(name="Happy"))
+        print(instance.author)
+        print(instance.theme.all())
+
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        form.cleaned_data['theme'] = get_emotion(form.cleaned_data['title'])
+        instance.save()
+        return super().form_valid(form)
+
+
+class QuoteDetailView(FormMixin, DetailView):
+    model = Quote
+    template_name = 'quote_detail.html'
+    context_object_name = 'quote'
+    form_class = CommentCreateForm
+
+    def get_success_url(self):
+        return reverse('virtual_agora_app:quote_detail', kwargs={'pk': self.object.id})
+
+    def get_context_data(self, **kwargs):
+        context = super(QuoteDetailView, self).get_context_data(**kwargs)
+        context['form'] = CommentCreateForm(initial={'quote': self.object})
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        form.instance.author = self.request.user
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.quote = self.object
+        obj.save()
+        return super(QuoteDetailView, self).form_valid(form)
+
+
+class ThemeQuotesView(DetailView, MultipleObjectMixin):
+    model = Theme
+    template_name = 'quote_theme.html'
+    context_object_name = 'theme'
+
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        object_list = Quote.objects.filter(theme=self.object)
+        context = super(ThemeQuotesView, self).get_context_data(
+            object_list=object_list, **kwargs)
+        return context

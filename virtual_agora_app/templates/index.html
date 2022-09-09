@@ -25,11 +25,12 @@
                   Quotes
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="#">Quotes Library</a></li>
+                  <li><a class="dropdown-item" href="{% url 'virtual_agora_app:quote_list' %}">Quotes Library</a></li>
                   <li>
                     <hr class="dropdown-divider">
                   </li>
-                  <li><a class="dropdown-item" href="{% url 'virtual_agora_app:philosophers_list' %}">Philosopers</a></li>
+                  <li><a class="dropdown-item" href="{% url 'virtual_agora_app:philosopher_list' %}">Philosopers</a>
+                  </li>
                 </ul>
               </li>
               <li class="nav-item dropdown me-lg-4">
@@ -55,11 +56,28 @@
                   {% endif %}
                 </ul>
               </li>
+
+              {% if user.is_authenticated %}
+              <li class="nav-item dropdown me-lg-4">
+                <a class="nav-link text-white dropdown-toggle fw-bold" href="#" id="navbarDropdown" role="button"
+                  data-bs-toggle="dropdown" aria-expanded="false">
+                  Profile
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="{% url 'virtual_agora_app:post_list' %}">View Profile</a></li>
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+                  <li><a class="dropdown-item" href="{% url 'virtual_agora_app:my_posts' %}">My History</a></li>
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+                  <li><a class="dropdown-item" href="{% url 'virtual_agora_app:my_posts' %}">Newsletter</a></li>
+                </ul>
+              </li>
+              {% endif %}
               <li class="nav-item">
                 <a class="nav-link text-white fw-bold me-lg-4" href="{% url 'virtual_agora_app:about' %}">About</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link text-white fw-bold me-lg-4" href="#">Contact Us</a>
               </li>
               <li>
                 <div class="d-none d-lg-block">

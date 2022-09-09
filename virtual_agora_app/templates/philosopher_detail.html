@@ -15,11 +15,29 @@ Philosopher
     <div class="row my-3">
         <div class="col-12 col-md-6 col-lg-4">
             <img src="{{ philosopher.image.url }}" class="img-fluid" alt="{{philosopher.name}}">
-        </div>
-        <div class="col-12 col-md-6 col-lg-8">
-            <h3 class="display-6 post-title text-center">
+            <h3 class="display-6 post-title my-3">
                 {{ philosopher.name }}
             </h3>
+            {% if philosopher.date_of_birth %}
+            <p class="text-muted">
+                <strong>Birth:</strong> {{ philosopher.date_of_birth }}
+            </p>
+            {% endif %}
+            {% if philosopher.date_of_death %}
+            <p class="text-muted">
+                <strong>Death:</strong> {{ philosopher.date_of_death }}
+            </p>
+            {% endif %}
+            {% if philosopher.link %}
+            <p class="text-muted">
+                <strong><a href="{{ philosopher.link }}" target="_blank">{{ philosopher.link }}</a></strong>
+            </p>
+            {% endif %}
+            <a href="{% url 'virtual_agora_app:philosopher_quotes' philosopher.id %}" class="btn btn-outline-primary">
+                Read Quotes by {{ philosopher.name}}
+            </a>
+        </div>
+        <div class="col-12 col-md-6 col-lg-8">
             <p>
                 {{ philosopher.description }}
             </p>

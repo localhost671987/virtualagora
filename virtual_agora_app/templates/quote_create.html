@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Create Quote{% endblock %}
+{% block content %}
+<div class="container pt-100 mt-3">
+    <div class="detail-page">
+        <h3 class="display-6 post-title">
+            <h1>Create Quote</h1>
+        </h3>
+        <form action="{% url 'virtual_agora_app:quote_create' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p}}
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}

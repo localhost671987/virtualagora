@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Quote Theme{% endblock %}
+{% block content %}
+<div class="container pt-100 mt-3">
+    <h2 class="text-center mb-4">
+        Quotes - {{ theme.name }}
+        <hr>
+    </h2>
+    <div class="row quotes-list">
+        {% for quote in object_list %}
+        <div class="col-12 mb-3">
+            <div class="card border-0">
+                <div class="card-body">
+                    <h5 class="card-title">{{ quote.title }}</h5>
+                    <p>
+                        <a href="{{ quote.author.get_absolute_url}}" class="text-decoration-none text-muted fw-bold"
+                            data-toggle="popover"
+                            title="Born - {{ quote.author.date_of_birth }} <br/> Died - {{quote.author.date_of_death }}"
+                            data-bs-html="true" data-bs-content="{{ quote.author.description|truncatechars:300 }}"
+                            data-bs-trigger="hover" data-bs-placement="top"> {{ quote.author }}</a>
+                    </p>
+                    {% if quote.theme %}
+                    <p class="mb-2">
+                        {% for item in quote.theme.all %}
+                        <span class="badge bg-primary">
+                            <a href="{% url 'virtual_agora_app:quote_theme' item.id %}"
+                                class="text-decoration-none text-white">
+                                {{item}}
+                            </a>
+                        </span>
+                        {% endfor %}
+                    </p>
+                    {% endif %}
+                    <p class="mb-0">
+                        <a href="{{ quote.get_absolute_url }}">
+                            {% if quote.get_comments.count > 0 %}
+                            {{ quote.get_comments.count }} comments
+                            {% endif %}
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="pagination justify-content-center my-4">
+        <span class="step-links py-3 bg-white">
+            {% if page_obj.has_previous %}
+            <a href="?page=1" class="p-3 text-decoration-none">
+                <i class="fa-solid fa-angles-left"></i>
+            </a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="p-3 bg-primary text-white text-decoration-none">
+                <i class="fa-solid fa-angle-left"></i>
+            </a>
+            {% endif %}
+
+            <span class="current p-3">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="p-3 bg-primary text-white text-decoration-none">
+                <i class="fa-solid fa-angle-right"></i>
+            </a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="p-3 text-decoration-none">
+                <i class="fa-solid fa-angles-right"></i>
+            </a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+{% endblock %}
