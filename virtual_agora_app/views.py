@@ -1,4 +1,5 @@
-from .models import Post, Philosopher, Comment, Quote, Theme
+from .models import MoodInstance, Post, Philosopher, Comment, Quote, Theme
+from users.models import CustomUser as User
 from django.utils import timezone
 from users.forms import RegistrationForm
 from django.views.generic.list import ListView
@@ -8,7 +9,7 @@ from django.views.generic.list import MultipleObjectMixin
 from django.views.generic import TemplateView
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import PostCreateForm, CommentCreateForm, QuoteCreateForm
+from .forms import PostCreateForm, CommentCreateForm, QuoteCreateForm, SubmitMoodForm
 from django.urls import reverse_lazy, reverse
 import text2emotion as te
 import nltk
@@ -17,11 +18,19 @@ nltk.download('omw-1.4')
 # Create your views here.
 
 
-def get_emotion(text):
+def get_emotion_list(text):
     dict = te.get_emotion(text)
-    emotions = [item for item in dict if dict[item] > 0.1]
-    print(emotions)
+    emotions = [item for item in dict if dict[item] > 0.3]
     return Theme.objects.filter(name__in=emotions)
+
+
+def get_emotion_max(text):
+    dict = te.get_emotion(text)
+    if max(dict.values()) > 0:
+        emotion = max(dict, key=dict.get)
+        return Theme.objects.get(name=emotion)
+    else:
+        return None
 
 
 def register(request):
@@ -40,7 +49,20 @@ def register(request):
 
 
 def index(request):
-    return render(request, 'index.html')
+    if request.method == 'POST':
+        form = SubmitMoodForm(request.POST)
+        if form.is_valid():
+            mood = form.cleaned_data['mood']
+            emotion = get_emotion_max(mood)
+            if emotion:
+                if request.user.is_authenticated and emotion:
+                    mood_instance = MoodInstance(
+                        user=request.user, mood=mood, theme=emotion)
+                    mood_instance.save()
+        return redirect('virtual_agora_app:quote_from_mood', mood=mood)
+    else:
+        form = SubmitMoodForm()
+    return render(request, 'index.html', {'form': form})
 
 
 class PostView(ListView):
@@ -155,7 +177,7 @@ class PhilosopherQuoteListView(DetailView, MultipleObjectMixin):
     paginate_by = 10
 
     def get_context_data(self, **kwargs):
-        object_list = Quote.objects.filter(author=self.object)
+        object_list = Quote.objects.filter(author=self.object).order_by('?')
         context = super(PhilosopherQuoteListView, self).get_context_data(
             object_list=object_list, **kwargs)
         return context
@@ -165,6 +187,9 @@ class QuoteListView(ListView):
     model = Quote
     template_name = 'quote_list.html'
     context_object_name = 'quotes'
+
+    def get_queryset(self):
+        return Quote.objects.order_by('?')
 
     paginate_by = 10
 
@@ -181,7 +206,8 @@ class QuoteCreateView(CreateView):
 
     def form_valid(self, form):
         instance = form.save(commit=False)
-        form.cleaned_data['theme'] = get_emotion(form.cleaned_data['title'])
+        form.cleaned_data['theme'] = get_emotion_list(
+            form.cleaned_data['title'])
         instance.save()
         return super().form_valid(form)
 
@@ -228,3 +254,16 @@ class ThemeQuotesView(DetailView, MultipleObjectMixin):
         context = super(ThemeQuotesView, self).get_context_data(
             object_list=object_list, **kwargs)
         return context
+
+
+def GetQuoteFromMoodView(request, mood):
+    emotion = get_emotion_max(mood)
+    if emotion:
+        quotes = Quote.objects.filter(theme__name=emotion).order_by('?')[:1]
+        return render(request, 'quote_from_mood.html', {'quote': quotes.first(), 'mood': mood.title()})
+    else:
+        return render(request, 'quote_from_mood.html', {'quote': None, 'mood': mood.title()})
+
+
+class ProfileView(TemplateView):
+    template_name = 'profile.html'

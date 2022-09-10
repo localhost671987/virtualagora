@@ -61,10 +61,6 @@
                   <li>
                     <hr class="dropdown-divider">
                   </li>
-                  <li><a class="dropdown-item" href="#">My Discussions</a></li>
-                  <li>
-                    <hr class="dropdown-divider">
-                  </li>
                   <li><a class="dropdown-item" href="{% url 'virtual_agora_app:post_create' %}">Create Post</a></li>
                   {% endif %}
                 </ul>
@@ -76,7 +72,7 @@
                   Profile
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="{% url 'virtual_agora_app:post_list' %}">View Profile</a></li>
+                  <li><a class="dropdown-item" href="{% url 'virtual_agora_app:profile' %}">View Profile</a></li>
                   <li>
                     <hr class="dropdown-divider">
                   </li>

@@ -22,4 +22,6 @@ urlpatterns = [
     path('quote/<int:pk>', views.QuoteDetailView.as_view(), name='quote_detail'),
     path('quote_create/', views.QuoteCreateView.as_view(), name='quote_create'),
     path('quote_theme/<int:pk>/', views.ThemeQuotesView.as_view(), name='quote_theme'),
+    path('quote_from_mood/<str:mood>/', views.GetQuoteFromMoodView, name='quote_from_mood'),
+    path('profile/', views.ProfileView.as_view(), name='profile'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

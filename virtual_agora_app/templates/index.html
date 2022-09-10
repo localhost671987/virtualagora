@@ -48,10 +48,6 @@
                   <li>
                     <hr class="dropdown-divider">
                   </li>
-                  <li><a class="dropdown-item" href="#">My Discussions</a></li>
-                  <li>
-                    <hr class="dropdown-divider">
-                  </li>
                   <li><a class="dropdown-item" href="{% url 'virtual_agora_app:post_create' %}">Create Post</a></li>
                   {% endif %}
                 </ul>
@@ -64,7 +60,7 @@
                   Profile
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="{% url 'virtual_agora_app:post_list' %}">View Profile</a></li>
+                  <li><a class="dropdown-item" href="{% url 'virtual_agora_app:profile' %}">View Profile</a></li>
                   <li>
                     <hr class="dropdown-divider">
                   </li>
@@ -104,18 +100,19 @@
         <p>
           How are you feeling today?
         </p>
-        <form class="form-inline search-menu d-flex justify-content-between d-flex">
-          <input class="custom-input" type="text">
-          <button class="btn search-btn" type="button">
+        <form id="mood_form" class="form-inline search-menu d-flex justify-content-between d-flex" method="post">
+          {% csrf_token %}
+          <input class="custom-input" type="text" name="mood" id="id_mood" maxlength="100">
+          <button class="btn search-btn" type="submit">
             <em class="fa-solid fa-lg fa-search"></em>
           </button>
         </form>
         <div class="text-center mt-5">
-          <button class="btn btn-lg btn-outline-light rounded-pill me-4 fw-bold my-2">Happy</button>
-          <button class="btn btn-lg btn-outline-light rounded-pill me-4 fw-bold my-2">Sad</button>
-          <button class="btn btn-lg btn-outline-light rounded-pill me-4 fw-bold my-2">Angry</button>
-          <button class="btn btn-lg btn-outline-light rounded-pill me-4 fw-bold my-2">Surprise</button>
-          <button class="btn btn-lg btn-outline-light rounded-pill fw-bold  my-2">Fear</button>
+          <button class="btn btn-lg btn-outline-light rounded-pill me-4 fw-bold my-2 happy-btn">Happy</button>
+          <button class="btn btn-lg btn-outline-light rounded-pill me-4 fw-bold my-2 sad-btn">Sad</button>
+          <button class="btn btn-lg btn-outline-light rounded-pill me-4 fw-bold my-2 angry-btn">Angry</button>
+          <button class="btn btn-lg btn-outline-light rounded-pill me-4 fw-bold my-2 surprise-btn">Surprise</button>
+          <button class="btn btn-lg btn-outline-light rounded-pill fw-bold my-2 fear-btn">Fear</button>
         </div>
       </div>
     </div>
@@ -131,6 +128,26 @@
   });
   $(".custom-input").focusout(function () {
     $(".search-menu").removeClass("custom-input-focused");
+  });
+  $(".happy-btn").on("click", function () {
+    $(".custom-input").val("happy");
+    $("#mood_form").submit();
+  });
+  $(".sad-btn").on("click", function () {
+    $(".custom-input").val("sad");
+    $("#mood_form").submit();
+  });
+  $(".angry-btn").on("click", function () {
+    $(".custom-input").val("angry");
+    $("#mood_form").submit();
+  });
+  $(".surprise-btn").on("click", function () {
+    $(".custom-input").val("surprise");
+    $("#mood_form").submit();
+  });
+  $(".fear-btn").on("click", function () {
+    $(".custom-input").val("fear");
+    $("#mood_form").submit();
   });
 </script>
 {% endblock %}

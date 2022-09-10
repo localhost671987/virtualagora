@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+<div class="container pt-100 mt-3">
+    <div class="about-page">
+        <h1 class="mb-4">Profile</h1>
+    </div>
+    <div class="row">
+        {% if user.avatar %}
+        <div class="col-12 col-md-6 col-lg-4">
+            <img src="{{ user.avatar.url }}" class="img-fluid" alt="avatar">
+        </div>
+        {% endif %}
+        <div class="col">
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -17,7 +17,11 @@ Quotes by {{ philosopher.name }}
         <div class="col-12 mb-3">
             <div class="card border-0">
                 <div class="card-body">
-                    <h5 class="card-title">{{ quote.title }}</h5>
+                    <h5 class="card-title">
+                        <a href="{{ quote.get_absolute_url}}" class="text-decoration-none fw-bold">
+                            {{ quote.title }}
+                        </a>
+                    </h5>
                     <p>
                         <a href="{{ quote.author.get_absolute_url}}" class="text-decoration-none text-muted fw-bold"
                             data-toggle="popover"
@@ -29,13 +33,13 @@ Quotes by {{ philosopher.name }}
                     <p class="mb-2">
                         {% for item in quote.theme.all %}
                         <span class="badge bg-primary">
-                            <a href="{% url 'virtual_agora_app:quote_theme' item.id %}" class="text-decoration-none text-white">
+                            <a href="{% url 'virtual_agora_app:quote_theme' item.id %}"
+                                class="text-decoration-none text-white">
                                 {{item}}
                             </a>
                         </span>
                         {% endfor %}
                     </p>
-                    {% endif %}
                     {% endif %}
                     <p class="mb-0">
                         <a href="{{ quote.get_absolute_url }}">

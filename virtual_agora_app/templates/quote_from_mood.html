@@ -1,0 +1,53 @@
+{% extends "base.html "%}
+{% load static %}
+{% block title %}
+Virtual Agora
+{% endblock %}
+{% block content %}
+<div class="container pt-100 mt-3">
+    <div class="detail-page">
+        <h3>
+            Quotes on {{ mood }}
+        </h3>
+        <hr>
+        {% if quote %}
+        <h3 class="display-6 post-title">
+            {{ quote.title }}
+        </h3>
+        <h5> -
+            <a href="{{ quote.author.get_absolute_url}}" class="text-decoration-none fw-bold" data-toggle="popover"
+                title="Born - {{ quote.author.date_of_birth }} <br/> Died - {{quote.author.date_of_death }}"
+                data-bs-html="true" data-bs-content="{{ quote.author.description|truncatechars:300 }}"
+                data-bs-trigger="hover" data-bs-placement="top"> {{ quote.author }}</a>
+        </h5>
+        {% if quote.theme %}
+        <p class="my-3">
+            {% for item in quote.theme.all %}
+            <span class="badge bg-primary">
+                <a href="{% url 'virtual_agora_app:quote_theme' item.id %}" class="text-decoration-none text-white">
+                    {{item}}
+                </a>
+            </span>
+            {% endfor %}
+        </p>
+        {% endif %}
+        <h5 class="inconsolata mt-3">
+            {% if quote.get_comments.count > 0 %}
+            <a href="{{ quote.get_absolute_url }}" class="text-muted"> {{ quote.get_comments.count }}
+                {% if quote.get_comments.count == 1 %}
+                Comment
+                {% else %}
+                Comments
+                {% endif %}
+            </a>
+            {% endif %}
+        </h5>
+        {% else %}
+        <p>
+            No quotes found on {{ mood }}.
+        </p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

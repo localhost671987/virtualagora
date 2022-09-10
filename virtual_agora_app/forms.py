@@ -21,3 +21,6 @@ class QuoteCreateForm(forms.ModelForm):
     class Meta:
         model = Quote
         exclude = ['published_date']
+
+class SubmitMoodForm(forms.Form):
+    mood = forms.CharField(label='Mood', max_length=100)
