@@ -17,6 +17,12 @@ Posts
         </h3>
         <p class="text-center">
             By - <span class="fw-bold">{{ post.author }}</span>
+            {% if post.status == "draft" %}
+            <span class="badge bg-primary ms-4">Draft</span>
+            {% endif %}
+        </p>
+        <p class="text-center">
+            {{ post.estimated_reading_time }} minutes to read
         </p>
         {% if post.author == request.user %}
         <p class="text-center">
@@ -44,15 +50,13 @@ Posts
             </div>
             {% endif %}
             <div class="col-12 {% if post.image %}col-lg-6{% endif %}">
-                {% if post.theme %}
-                <span class="badge bg-primary">{{post.themes}}</span>
-                {% endif %}
                 <p class="post-content mt-2">
                     {{ post.description }}
                 </p>
                 <hr>
                 <div class="comment">
                     <h4 class="inconsolata">Comments</h4>
+                    {% if request.user.is_authenticated %}
                     <form method="POST" class="post-comment mb-5">
                         {% csrf_token %}
                         <textarea class="form-control comment-form bg-white border-0" name="body" cols="40" rows="5"
@@ -62,6 +66,7 @@ Posts
                             <button type="submit" class="save btn btn-primary post-comment-btn">Submit</button>
                         </div>
                     </form>
+                    {% endif %}
                     {% for comment in post.get_comments %}
                     <div class="comment-item card px-3 py-2 border-0">
                         <p class="comment-author">

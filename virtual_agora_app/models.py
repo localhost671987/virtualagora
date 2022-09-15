@@ -6,7 +6,6 @@ from django.conf import settings
 from django.urls import reverse
 
 
-
 class Theme(models.Model):
     name = models.CharField(max_length=50)
 
@@ -58,6 +57,7 @@ class Quote(models.Model):
     def get_comments(self):
         return Comment.objects.filter(quote=self).order_by('-published_date')
 
+
 class Post(models.Model):
     class PostObjects(models.Manager):
         def get_queryset(self):
@@ -66,8 +66,6 @@ class Post(models.Model):
         ('draft', 'Draft'),
         ('published', 'Published'),
     )
-    theme = models.ManyToManyField(
-        Theme, blank=True, related_name='post_theme')
     title = models.CharField(max_length=250)
     description = models.TextField(null=True)
     published_date = models.DateTimeField(default=timezone.now)
@@ -88,14 +86,14 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
-    def themes(self):
-        return ', '.join([item.name for item in self.theme.all()])
-
     def get_absolute_url(self):
         return reverse('virtual_agora_app:post_detail', args=[self.pk])
 
     def get_comments(self):
         return Comment.objects.filter(post=self).order_by('-published_date')
+
+    def estimated_reading_time(self):
+        return round(len(self.description.split()) / 200)
 
 
 class Comment(models.Model):

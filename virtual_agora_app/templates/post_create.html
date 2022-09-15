@@ -18,9 +18,9 @@
                 </div>
                 <div class="mb-3">
                     <label for="description" class="form-label">Content</label>
-                    <textarea class="form-control" name="description" cols="40" rows="10" required=""
+                    <textarea class="form-control" name="description" cols="40" rows="10" required="required"
                         id="id_description" aria-required="true"></textarea>
-                </div> 
+                </div>
                 <div class="mb-3">
                     <label for="image" class="form-label">Image</label>
                     <input class="form-control" type="file" name="image" accept="image/*" id="id_image">
@@ -34,11 +34,24 @@
                     <option value="draft">Draft</option>
                     <option value="published" selected="">Published</option>
                 </select>
+                <div class="text-danger">
+                    {{ error}}
+                </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-outline-primary draft-btn">Save Draft</button>
             </form>
         </div>
 
     </div>
 </div>
 
+{% endblock %}
+{% block javascript %}
+<script>
+    $('.draft-btn').click(function (e) {
+        e.preventDefault();
+        $('#id_status').val('draft');
+        $(this).closest('form').submit();
+    });
+</script>
 {% endblock %}

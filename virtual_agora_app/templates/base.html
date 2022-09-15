@@ -16,6 +16,7 @@
   {% endcompress %}
   <!-- <link href="{% static 'scss/custom.css' %}" rel="stylesheet"> -->
   <link rel="stylesheet" href="{% static 'fontawesome-free/css/all.min.css' %}" />
+  <link rel="stylesheet" href="{% static 'calendar/lib/main.min.css' %}" />
 </head>
 
 <body class="bg-light">
@@ -30,8 +31,14 @@
             aria-label="Toggle navigation">
             <i class="fa-solid fa-bars p-1"></i>
           </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <div class="collapse justify-content-end navbar-collapse" id="navbarSupportedContent">
+            <form class="d-flex me-5">
+              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-primary p-2" type="submit">
+                <em class="fa-solid fa-lg fa-search"></em>
+              </button>
+            </form>
+            <ul class="navbar-nav  mb-2 mb-lg-0">
               <li class="nav-item dropdown me-lg-4">
                 <a class="nav-link text-black dropdown-toggle fw-bold" href="#" id="navbarDropdown" role="button"
                   data-bs-toggle="dropdown" aria-expanded="false">
@@ -66,22 +73,9 @@
                 </ul>
               </li>
               {% if user.is_authenticated %}
-              <li class="nav-item dropdown me-lg-4">
-                <a class="nav-link text-black dropdown-toggle fw-bold" href="#" id="navbarDropdown" role="button"
-                  data-bs-toggle="dropdown" aria-expanded="false">
-                  Profile
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="{% url 'virtual_agora_app:profile' %}">View Profile</a></li>
-                  <li>
-                    <hr class="dropdown-divider">
-                  </li>
-                  <li><a class="dropdown-item" href="{% url 'virtual_agora_app:my_posts' %}">My History</a></li>
-                  <li>
-                    <hr class="dropdown-divider">
-                  </li>
-                  <li><a class="dropdown-item" href="{% url 'virtual_agora_app:my_posts' %}">Newsletter</a></li>
-                </ul>
+              <li class="nav-item">
+                <a class="nav-link text-black fw-bold me-lg-4"
+                  href="{% url 'virtual_agora_app:profile' 7 %}">Profile</a>
               </li>
               {% endif %}
               <li class="nav-item">
@@ -119,6 +113,7 @@
 
   <script src="{% static 'jquery/dist/jquery.min.js' %}"></script>
   <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'calendar/lib/main.min.js' %}"></script>
   <script>
     $(document).ready(function () {
       $('[data-toggle="popover"]').popover();

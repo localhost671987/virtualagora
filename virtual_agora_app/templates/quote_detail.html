@@ -30,6 +30,7 @@ Virtual Agora
         <hr>
         <div class="comment">
             <h4 class="inconsolata">Comments</h4>
+            {% if request.user.is_authenticated %}
             <form method="POST" class="post-comment mb-5">
                 {% csrf_token %}
                 <textarea class="form-control comment-form bg-white border-0" name="body" cols="40" rows="5"
@@ -39,6 +40,7 @@ Virtual Agora
                     <button type="submit" class="save btn btn-primary post-comment-btn">Submit</button>
                 </div>
             </form>
+            {% endif %}
             {% for comment in quote.get_comments %}
             <div class="comment-item card px-3 py-2 border-0">
                 <p class="comment-author">

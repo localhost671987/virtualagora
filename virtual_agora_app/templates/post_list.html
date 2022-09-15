@@ -21,19 +21,20 @@ Posts
                 <img src="{% static 'img/statue.jpg' %}" class="card-img-top" alt="...">
                 {% endif %}
                 <div class="card-body">
-                    <p class="card-title mb-3 h6">
-                        <a href="{{ post.get_absolute_url }}" class="stretched-link text-decoration-none fw-bold">{{ post.title }}</a>
+                    <p class="card-title mb-2 h6">
+                        <a href="{{ post.get_absolute_url }}" class="stretched-link text-decoration-none fw-bold">
+                            {{ post.title }}</a>
                     </p>
+
                     <div class="d-flex flex-wrap justify-content-between">
                         <p class="mb-2">
                             <b>{{post.author}}</b> - {{post.published_date|timesince}} ago
                         </p>
-                        <p class="mb-2">
-                            {% if post.theme %}
-                            <span class="badge bg-primary">{{post.themes}}</span>
-                            {% endif %}
-                        </p>
                     </div>
+                    <p class="mb-0 text-end">
+                        {{ post.estimated_reading_time }} minutes to read
+                    </p>
+
 
 
                     {% if post.get_comments.count > 0 %}

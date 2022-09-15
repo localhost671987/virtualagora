@@ -1,3 +1,5 @@
+from django.conf import settings
+from datetime import timedelta
 from .models import MoodInstance, Post, Philosopher, Comment, Quote, Theme
 from users.models import CustomUser as User
 from django.utils import timezone
@@ -13,6 +15,8 @@ from .forms import PostCreateForm, CommentCreateForm, QuoteCreateForm, SubmitMoo
 from django.urls import reverse_lazy, reverse
 import text2emotion as te
 import nltk
+from mailjet_rest import Client
+
 nltk.download('omw-1.4')
 
 # Create your views here.
@@ -70,6 +74,9 @@ class PostView(ListView):
     template_name = 'post_list.html'
     context_object_name = 'posts'
 
+    def get_queryset(self):
+        return Post.objects.all().filter(status='published').order_by('-published_date')
+
     paginate_by = 10
 
 
@@ -120,8 +127,12 @@ class PostCreateView(CreateView):
     form_class = PostCreateForm
 
     def form_valid(self, form):
-        form.instance.author = self.request.user
-        return super().form_valid(form)
+        if form.is_valid():
+            form.instance.author = self.request.user
+            return super().form_valid(form)
+
+    def form_invalid(self, form):
+        return self.render_to_response({'form': form, 'error': form.errors})
 
 
 class PostUpdateView(UpdateView):
@@ -138,6 +149,9 @@ class PostUpdateView(UpdateView):
         if obj.author != self.request.user:
             return redirect('virtual_agora_app:post_list')
         return super().dispatch(request, *args, **kwargs)
+
+    def form_invalid(self, form):
+        return self.render_to_response({'form': form, 'error': form.errors})
 
 
 class PostDeleteView(DeleteView):
@@ -265,5 +279,75 @@ def GetQuoteFromMoodView(request, mood):
         return render(request, 'quote_from_mood.html', {'quote': None, 'mood': mood.title()})
 
 
-class ProfileView(TemplateView):
-    template_name = 'profile.html'
+def ProfileView(request, td=30):
+    moods = MoodInstance.objects.filter(user=request.user)
+    happy = MoodInstance.objects.filter(
+        theme="1", user=request.user, published_date__gte=timezone.now() - timedelta(days=td)).count()
+    sad = MoodInstance.objects.filter(
+        theme="2", user=request.user, published_date__gte=timezone.now() - timedelta(days=td)).count()
+    angry = MoodInstance.objects.filter(
+        theme="3", user=request.user, published_date__gte=timezone.now() - timedelta(days=td)).count()
+    surprise = MoodInstance.objects.filter(
+        theme="4", user=request.user, published_date__gte=timezone.now() - timedelta(days=td)).count()
+    fear = MoodInstance.objects.filter(
+        theme="5", user=request.user, published_date__gte=timezone.now() - timedelta(days=td)).count()
+    return render(request, 'profile.html', {'moods': moods, 'happy': happy, 'sad': sad, 'angry': angry, 'surprise': surprise, 'fear': fear, 'td': td})
+
+
+def welcome_email(request):
+    mailjet = Client(
+        auth=(settings.API_KEY, settings.API_SECRET), version='v3.1')
+    data = {
+        'Messages': [
+            {
+                "From": {
+                    "Email": settings.EMAIL_HOST_USER,
+                    "Name": "Virtual Agora"
+                },
+                "To": [
+                    {
+                        "Email": request.user.email,
+                        "Name": request.user.first_name
+                    }
+                ],
+                "Subject": "Newsletter ",
+                "TextPart": "Subscribed!!!",
+                "HTMLPart": f"<h3>Dear {request.user.first_name}, welcome to Virtual Agora!</h3><br />May the force be with you!",
+                "CustomID": "Newsletter"
+            }
+        ]
+    }
+    result = mailjet.send.create(data=data)
+    print(result.status_code)
+    print(result.json())
+
+
+def subscribe(request):
+    request.user.is_subscribed = True
+    request.user.save()
+    welcome_email(request)
+    return render(request, 'profile.html')
+
+
+def unsubscribe(request):
+    request.user.is_subscribed = False
+    request.user.save()
+    return render(request, 'profile.html')
+
+
+class SearchResultsView(TemplateView):
+    model = Quote
+    template_name = 'search_results.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['quotes'] = Quote.objects.filter(
+            title__icontains=self.request.GET.get('q'))
+        return context
+
+    def get_search_results(self, request, queryset, search_term):
+        queryset, use_distinct = super().get_search_results(
+            request, queryset, search_term)
+        queryset |= self.model.objects.filter(
+            title__icontains=search_term)
+        return queryset, use_distinct

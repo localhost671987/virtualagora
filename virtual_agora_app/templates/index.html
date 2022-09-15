@@ -54,22 +54,8 @@
               </li>
 
               {% if user.is_authenticated %}
-              <li class="nav-item dropdown me-lg-4">
-                <a class="nav-link text-white dropdown-toggle fw-bold" href="#" id="navbarDropdown" role="button"
-                  data-bs-toggle="dropdown" aria-expanded="false">
-                  Profile
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="{% url 'virtual_agora_app:profile' %}">View Profile</a></li>
-                  <li>
-                    <hr class="dropdown-divider">
-                  </li>
-                  <li><a class="dropdown-item" href="{% url 'virtual_agora_app:my_posts' %}">My History</a></li>
-                  <li>
-                    <hr class="dropdown-divider">
-                  </li>
-                  <li><a class="dropdown-item" href="{% url 'virtual_agora_app:my_posts' %}">Newsletter</a></li>
-                </ul>
+              <li class="nav-item">
+                <a class="nav-link text-white fw-bold me-lg-4" href="{% url 'virtual_agora_app:profile' 7 %}">Profile</a>
               </li>
               {% endif %}
               <li class="nav-item">
@@ -112,7 +98,7 @@
           <button class="btn btn-lg btn-outline-light rounded-pill me-4 fw-bold my-2 sad-btn">Sad</button>
           <button class="btn btn-lg btn-outline-light rounded-pill me-4 fw-bold my-2 angry-btn">Angry</button>
           <button class="btn btn-lg btn-outline-light rounded-pill me-4 fw-bold my-2 surprise-btn">Surprise</button>
-          <button class="btn btn-lg btn-outline-light rounded-pill fw-bold my-2 fear-btn">Fear</button>
+          <button class="btn btn-lg btn-outline-light rounded-pill fw-bold my-2 fear-btn">Afraid</button>
         </div>
       </div>
     </div>
@@ -146,7 +132,7 @@
     $("#mood_form").submit();
   });
   $(".fear-btn").on("click", function () {
-    $(".custom-input").val("fear");
+    $(".custom-input").val("afraid");
     $("#mood_form").submit();
   });
 </script>

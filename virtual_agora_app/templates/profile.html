@@ -6,13 +6,179 @@
         <h1 class="mb-4">Profile</h1>
     </div>
     <div class="row">
-        {% if user.avatar %}
-        <div class="col-12 col-md-6 col-lg-4">
-            <img src="{{ user.avatar.url }}" class="img-fluid" alt="avatar">
+        <div class="col-12 col-lg-4">
+            <div class="card p-4 border-0">
+                {% if user.avatar %}
+                <img src="{{ user.avatar.url }}" class="img-fluid mb-4" alt="avatar">
+                {% endif %}
+                <h5>
+                    {{ user.first_name }} {{ user.last_name }}
+                </h5>
+                <p class="mb-2">
+                    Username: {{ user.user_name }}
+                </p>
+                <p class="mb-2">
+                    Email: {{ user.email }}
+                </p>
+                <p class="mb-0">
+                    Newsletter Subscription :
+                    {% if user.is_subscribed %}
+                    <span class="badge bg-secondary">Active</span>
+                    <button class="d-block unsubscribe-btn btn btn-link px-0">Unsubscribe from Newsletter</button>
+                    {% else %}
+                    <span class="badge bg-secondary">Not Active</span>
+                    <button class="d-block subscribe-btn btn btn-link px-0">Subscribe to Newsletter</button>
+                    {% endif %}
+                </p>
+            </div>
         </div>
-        {% endif %}
-        <div class="col">
+        <div class="col-12 col-lg-8">
+            <div class="card p-4 border-0">
+                <h3>
+                    History
+                </h3>
+                <p>
+                    Your mood history for the past
+                    <select class="form-select w-25 d-inline ms-2" id="timedelta"
+                        aria-label="Floating label select example">
+                        <option value="7">week</option>
+                        <option value="30">month</option>
+                        <option value="365">year</option>
+                    </select>
+                </p>
+
+                <div class="row">
+                    <div class="col text-center my-3">
+                        <i class="d-block fa-regular fa-face-smile fa-4x mb-2"></i>
+                        <p class="text-muted">Happy</p>
+                        <h3 class="fw-bold">{{happy}}</h3>
+                    </div>
+                    <div class="col text-center my-3">
+                        <i class="d-block fa-regular fa-face-sad-tear fa-4x mb-2"></i>
+                        <p class="text-muted">Sad</p>
+                        <h3 class="fw-bold">{{sad}}</h3>
+                    </div>
+                    <div class="col text-center my-3">
+                        <i class="d-block fa-regular fa-face-angry fa-4x mb-2"></i>
+                        <p class="text-muted">Angry</p>
+                        <h3 class="fw-bold">{{angry}}</h3>
+                    </div>
+                    <div class="col text-center my-3">
+                        <i class="d-block fa-regular fa-face-tired fa-4x mb-2"></i>
+                        <p class="text-muted">Afraid</p>
+                        <h3 class="fw-bold">{{fear}}</h3>
+                    </div>
+                    <div class="col text-center my-3">
+                        <i class="d-block fa-regular fa-face-surprise fa-4x mb-2"></i>
+                        <p class="text-muted">Surprised</p>
+                        <h3 class="fw-bold">{{surprise}}</h3>
+                    </div>
+                </div>
+                <p class="text-center mb-0">
+                    Number of occasions you reported these moods
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="card p-4 border-0 my-4">
+        <div id="calendar">
+
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    let timedelta = {{ td }};
+    $(document).ready(function () {
+        if (timedelta == 7) {
+            $('#timedelta').val(7);
+        }
+        else if (timedelta == 30) {
+            $('#timedelta').val(30);
+        }
+        else if (timedelta == 365) {
+            $('#timedelta').val(365);
+        }
+    });
+
+    $("#timedelta").change(function () {
+        let selection = $('#timedelta').find(":selected").val();
+        let url = "{% url 'virtual_agora_app:profile' 123 %}".replace(/123/, selection.toString());
+        document.location.href = url;
+        console.log(selection);
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        let calendarEl = document.getElementById('calendar');
+        let calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            events: [
+                {% for mood in moods %}
+                {
+                title: '{{ mood.mood }}',
+                start: '{{mood.published_date|date:"Y-m-d"}}',
+            },
+            {% endfor %}
+            ]
+        });
+    calendar.render();
+    });
+
+    $(".subscribe-btn").on("click", function () {
+        $(this).prop("disabled", true);
+        $(this).html(
+            `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>`
+        );
+        let url = "{% url 'virtual_agora_app:subscribe' %}";
+        $.ajax({
+            url: url,
+            type: "GET",
+            success: function (data) {
+                console.log("success subcribe");
+                $(".badge").text("Active");
+                $(".subscribe-btn").addClass("unsubscribe-btn");
+                $(".unsubscribe-btn").removeClass("subscribe-btn");
+                $(".unsubscribe-btn").html("");
+                $(".unsubscribe-btn").html("Unsubscribe from Newsletter");
+            },
+            error: function (data) {
+                alert("Something went wrong");
+                $(".subscribe-btn").html("Subsribe to Newsletter");
+            },
+            complete: function (data) {
+                console.log("complete subscribe");
+                $(".unsubscribe-btn").prop("disabled", false);
+            }
+        });
+    });
+
+    $(".unsubscribe-btn").on("click", function () {
+        $(this).prop("disabled", true);
+        $(this).html(
+            `<span class="rounded spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>`
+        );
+        let url = "{% url 'virtual_agora_app:unsubscribe' %}";
+        $.ajax({
+            url: url,
+            type: "GET",
+            success: function (data) {
+                $(".badge").text("Not Active");
+                $(".unsubscribe-btn").addClass("subscribe-btn");
+                $(".subscribe-btn").removeClass("unsubscribe-btn");
+                $(".subscribe-btn").html("");
+                $(".subscribe-btn").html("Subscribe to Newsletter");
+            },
+            error: function (data) {
+                alert("Something went wrong");
+            },
+            complete: function (data) {
+                console.log("complete unsubscribe");
+                $(".subscribe-btn").prop("disabled", false);
+            }
+        });
+    });
+
+</script>
 {% endblock %}
