@@ -52,6 +52,11 @@ Quotes by {{ philosopher.name }}
             </div>
         </div>
         {% endfor %}
+        {% if not object_list %}
+        <p class="text-center">
+            No quotes found
+        </p>
+        {% endif %}
     </div>
 
     <div class="pagination justify-content-center my-4">

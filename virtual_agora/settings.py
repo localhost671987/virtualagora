@@ -45,8 +45,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'virtual_agora_app',
-    # 'django_extensions',
-    'compressor'
 ]
 
 MIDDLEWARE = [

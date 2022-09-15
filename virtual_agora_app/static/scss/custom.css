@@ -5,7 +5,7 @@
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
    */
 @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Inconsolata:wght@900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;600;900&display=swap");
 
 /* line 1, c:/users/rraja/desktop/virtual agora/virtual_agora_app/static/bootstrap/scss/_root.scss */
 :root {
@@ -15112,19 +15112,25 @@ fieldset:disabled .btn {
     outline-offset: -7px;
 }
 
-/* line 59, c:/users/rraja/desktop/virtual agora/virtual_agora_app/static/scss/custom.scss */
+/* line 58, c:/users/rraja/desktop/virtual agora/virtual_agora_app/static/scss/custom.scss */
+.inconsolata {
+    font-family: 'Inconsolata', monospace;
+    font-weight: 600;
+}
+
+/* line 65, c:/users/rraja/desktop/virtual agora/virtual_agora_app/static/scss/custom.scss */
 .navbar a {
     text-transform: uppercase;
 }
 
-/* line 63, c:/users/rraja/desktop/virtual agora/virtual_agora_app/static/scss/custom.scss */
+/* line 69, c:/users/rraja/desktop/virtual agora/virtual_agora_app/static/scss/custom.scss */
 .navbar .navbar-brand {
     text-transform: none;
     font-family: 'Inconsolata', monospace;
     font-weight: 900;
 }
 
-/* line 70, c:/users/rraja/desktop/virtual agora/virtual_agora_app/static/scss/custom.scss */
+/* line 76, c:/users/rraja/desktop/virtual agora/virtual_agora_app/static/scss/custom.scss */
 .topnav {
     position: fixed;
     top: 0;
@@ -15132,21 +15138,32 @@ fieldset:disabled .btn {
     z-index: 999;
 }
 
-/* line 76, c:/users/rraja/desktop/virtual agora/virtual_agora_app/static/scss/custom.scss */
+/* line 82, c:/users/rraja/desktop/virtual agora/virtual_agora_app/static/scss/custom.scss */
 .topnav .navbar-brand {
     padding: 2px 10px 6px 10px !important;
     font-size: 1.7rem !important;
     color: white;
 }
 
-/* line 84, c:/users/rraja/desktop/virtual agora/virtual_agora_app/static/scss/custom.scss */
+/* line 90, c:/users/rraja/desktop/virtual agora/virtual_agora_app/static/scss/custom.scss */
 .post-list .card-img-top {
     height: 300px;
     object-fit: cover;
 }
 
-/* line 91, c:/users/rraja/desktop/virtual agora/virtual_agora_app/static/scss/custom.scss */
+/* line 97, c:/users/rraja/desktop/virtual agora/virtual_agora_app/static/scss/custom.scss */
 .detail-page .post-title {
     font-size: 2rem;
     font-weight: 300;
+}
+
+/* line 104, c:/users/rraja/desktop/virtual agora/virtual_agora_app/static/scss/custom.scss */
+.philosophers-list .card-img-top {
+    height: 300px;
+    object-fit: cover;
+}
+
+/* line 110, c:/users/rraja/desktop/virtual agora/virtual_agora_app/static/scss/custom.scss */
+.comment-form:focus {
+    box-shadow: none;
 }

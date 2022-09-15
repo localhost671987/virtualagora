@@ -1,5 +1,4 @@
 {% load static %}
-{% load compress %}
 
 <!doctype html>
 <html lang="en">
@@ -11,10 +10,8 @@
     {% block title %}
     {% endblock %}
   </title>
-  {% compress css %}
-  <link type="text/x-scss" href="{% static 'scss/custom.scss' %}" rel="stylesheet" media="screen">
-  {% endcompress %}
-  <!-- <link href="{% static 'scss/custom.css' %}" rel="stylesheet"> -->
+  <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}" />
+  <link href="{% static 'scss/custom.css' %}" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'fontawesome-free/css/all.min.css' %}" />
   <link rel="stylesheet" href="{% static 'calendar/lib/main.min.css' %}" />
 </head>
@@ -32,12 +29,12 @@
             <i class="fa-solid fa-bars p-1"></i>
           </button>
           <div class="collapse justify-content-end navbar-collapse" id="navbarSupportedContent">
-            <form class="d-flex me-5">
+            <!-- <form class="d-flex me-5">
               <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
               <button class="btn btn-primary p-2" type="submit">
                 <em class="fa-solid fa-lg fa-search"></em>
               </button>
-            </form>
+            </form> -->
             <ul class="navbar-nav  mb-2 mb-lg-0">
               <li class="nav-item dropdown me-lg-4">
                 <a class="nav-link text-black dropdown-toggle fw-bold" href="#" id="navbarDropdown" role="button"
